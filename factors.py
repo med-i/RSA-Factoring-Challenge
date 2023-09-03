@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-import sys
-import math
+from sys import argv, stderr
+from math import sqrt
 
 
 def find_factors(num):
@@ -14,7 +14,7 @@ def find_factors(num):
             print(f"{num}={num // fact}*{fact}")
             return
 
-    down = int(math.sqrt(num))
+    down = int(sqrt(num))
     up = down + 1
 
     while True:
@@ -30,15 +30,25 @@ def find_factors(num):
 
 
 def main():
-    if len(sys.argv) < 2:
-        return
+    if len(argv) < 2:
+        print("Usage: factors <file>", file=stderr)
+        exit(1)
 
-    file_path = sys.argv[1]
-    with open(file_path, "r") as file:
-        lines = file.readlines()
-        for line in lines:
-            number = int(line)
-            find_factors(number)
+    file_path = argv[1]
+
+    try:
+        with open(file_path, "r") as file:
+            lines = file.readlines()
+            for line in lines:
+                line = line.strip()
+                number = int(line)
+                find_factors(number)
+    except FileNotFoundError:
+        print(f"Error: File '{file_path}' not found", file=stderr)
+        exit(1)
+    except ValueError:
+        print(f"Error: Invalid number '{line}'", file=stderr)
+        exit(1)
 
 
 if __name__ == "__main__":
